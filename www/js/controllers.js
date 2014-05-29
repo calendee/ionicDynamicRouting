@@ -1,15 +1,14 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {
-})
+    .controller("TabController", function($scope, DynamicStateService, TabsService) {
+        console.log("TabController!");
 
-.controller('FriendsCtrl', function($scope, Friends) {
-  $scope.friends = Friends.all();
-})
+        $scope.data = {};
 
-.controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
-  $scope.friend = Friends.get($stateParams.friendId);
-})
+        TabsService.getTabs().then(
+            function(tabs) {
+                $scope.data.tabs = tabs;
+            }
+        );
 
-.controller('AccountCtrl', function($scope) {
-});
+    })
