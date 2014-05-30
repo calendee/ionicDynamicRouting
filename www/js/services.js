@@ -1,7 +1,7 @@
 angular.module("starter.services", [])
 
 
-    .service("DynamicStateService", function($state, $rootScope, TabsService) {
+    .service("DynamicStateService", ["$state", "$rootScope", "TabsService", function($state, $rootScope, TabsService) {
 
         var generateTabs = function(tabs) {
 
@@ -27,11 +27,11 @@ angular.module("starter.services", [])
             function(tabs) {
                 generateTabs(tabs);
             }
-        )
+        );
 
-    })
+    }])
 
-    .factory("TabsService", function($q, $timeout) {
+    .factory("TabsService", ["$q", "$timeout", function($q, $timeout) {
 
         var tabs = [
             {
@@ -69,7 +69,7 @@ angular.module("starter.services", [])
 
             $timeout( function() {
                 deferred.resolve(tabs);
-            }, 3500)
+            }, 3500);
 
             return deferred.promise;
         };
@@ -78,4 +78,4 @@ angular.module("starter.services", [])
             getTabs : getTabs
         };
 
-    });
+    }]);

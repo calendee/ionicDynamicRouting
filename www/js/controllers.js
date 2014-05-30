@@ -1,14 +1,14 @@
 angular.module('starter.controllers', [])
 
-    .controller("LoadingController", function($scope, $state, DynamicStateService) {
+    .controller("LoadingController", ["$scope", "$state", "DynamicStateService", function($scope, $state, DynamicStateService) {
 
         $scope.$on('statesReady', function(event, data) {
             $state.go(data.startingState);
         });
 
-    })
+    }])
 
-    .controller("TabController", function($scope, DynamicStateService, TabsService) {
+    .controller("TabController", ["$scope", "TabsService", function($scope, TabsService) {
 
         $scope.data = {};
 
@@ -18,4 +18,4 @@ angular.module('starter.controllers', [])
             }
         );
 
-    })
+    }]);
