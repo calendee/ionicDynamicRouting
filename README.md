@@ -1,7 +1,10 @@
 ionicDynamicRouting
 ===================
 
-Sample of using Ionic tabs with dynamic routing.
+Sample of using Ionic tabs with dynamically generated routing, states, and controllers.
+
+#Demo
+<img src="loading-demo.gif"/>
 
 The names and quantity of the tabs are unknown until retrieved from a service.
 
