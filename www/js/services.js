@@ -1,46 +1,41 @@
 angular.module("starter.services", [])
 
-    .service("DynamicStateService", ["$state", "$rootScope", "TabsService", function($state, $rootScope, TabsService) {
+    .factory("StateCreator", ["$state", "$rootScope", function($state, $rootScope) {
 
-        var generateTabs = function(tabs) {
+        var createState = function(parentState, stateDetails) {
 
-            angular.forEach(tabs, function(tab) {
+            var stateConfig = {};
+            stateConfig.url = stateDetails.stateUrl;
+            stateConfig.views = {};
+            stateConfig.views[stateDetails.viewName] = {};
+            stateConfig.views[stateDetails.viewName].templateUrl = stateDetails.template;
 
-                var stateConfig = {};
-                stateConfig.url = tab.stateUrl;
-                stateConfig.views = {};
-                stateConfig.views[tab.viewName] = {};
-                stateConfig.views[tab.viewName].templateUrl = tab.template;
+            switch(stateDetails.viewType) {
+                case "list":
+                    stateConfig.views[stateDetails.viewName].controller = "ListController";
 
-                switch(tab.viewType) {
-                    case "list":
-                        stateConfig.views[tab.viewName].controller = "ListController";
+                    var resolve = {
+                        ListData : [ "DataSource", function(DataSource) {
+                            return DataSource.getData(stateDetails.dataSource);
+                        }]
+                    };
+                    stateConfig.resolve = resolve;
 
-                        var resolve = {
-                            ListData : [ "DataSource", function(DataSource) {
-                                return DataSource.getData(tab.dataSource);
-                            }]
-                        };
-                        stateConfig.resolve = resolve;
-
-                        break;
-                }
-
-                app.stateProvider.state(tab.state, stateConfig)
-
-            });
-
-            $rootScope.$broadcast("statesReady", {
-                "startingState" : tabs[0].state
-            });
-
-        };
-
-        TabsService.getTabs().then(
-            function(tabs) {
-                generateTabs(tabs);
+                    break;
             }
-        );
+
+            app.stateProvider.state(parentState + "." + stateDetails.state, stateConfig);
+
+            $rootScope.$broadcast("stateCreated", {
+                "state"         : stateDetails.state,
+                "parentState"   : parentState
+            });
+
+        }
+
+        return {
+            createState : createState
+        }
 
     }])
 
@@ -49,7 +44,8 @@ angular.module("starter.services", [])
         var tabs = [
             {
                 "label"         : "Dash",
-                "state"         : "tab.dash",
+                "parentState"   : "tab",
+                "state"         : "dash",
                 "viewName"      : "tab-dash",
                 "stateUrl"      : "/dash",
                 "url"           : "#/tab/dash",
@@ -60,7 +56,8 @@ angular.module("starter.services", [])
             },
             {
                 "label"         : "Friends",
-                "state"         : "tab.friends",
+                "parentState"   : "tab",
+                "state"         : "friends",
                 "viewName"      : "tab-friends",
                 "stateUrl"      : "/friends",
                 "url"           : "#/tab/friends",
@@ -71,7 +68,8 @@ angular.module("starter.services", [])
             },
             {
                 "label"         : "Account",
-                "state"         : "tab.account",
+                "parentState"   : "tab",
+                "state"         : "account",
                 "viewName"      : "tab-account",
                 "stateUrl"      : "/account",
                 "url"           : "#/tab/account",

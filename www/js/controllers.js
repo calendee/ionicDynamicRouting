@@ -1,10 +1,21 @@
 angular.module('starter.controllers', [])
 
-    .controller("LoadingController", ["$scope", "$state", "DynamicStateService", function($scope, $state, DynamicStateService) {
+    .controller("LoadingController", ["$scope", "$state", "StateCreator", "TabsService", function($scope, $state, StateCreator, TabsService) {
 
-        $scope.$on('statesReady', function(event, data) {
-            $state.go(data.startingState);
-        });
+        TabsService.getTabs().then(
+
+            function(tabs) {
+
+                angular.forEach(tabs, function(tab) {
+
+                    StateCreator.createState(tab.parentState, tab);
+
+                });
+
+                $state.go(tabs[0].parentState + "." + tabs[0].state);
+
+            }
+        );
 
     }])
 
