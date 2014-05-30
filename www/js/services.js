@@ -1,7 +1,7 @@
-angular.module('starter.services', [])
+angular.module("starter.services", [])
 
 
-    .service("DynamicStateService", function($state, TabsService, $timeout) {
+    .service("DynamicStateService", function($state, $rootScope, TabsService) {
 
         var generateTabs = function(tabs) {
 
@@ -17,9 +17,11 @@ angular.module('starter.services', [])
 
             });
 
-            $state.go(tabs[0].state);
+            $rootScope.$broadcast("statesReady", {
+                "startingState" : tabs[0].state
+            });
 
-        }
+        };
 
         TabsService.getTabs().then(
             function(tabs) {
@@ -58,7 +60,7 @@ angular.module('starter.services', [])
                 "url"       : "#/tab/account",
                 "template"  : "templates/tab-account.html",
                 "icon"      : "ion-gear-b"
-            },
+            }
         ];
 
         var getTabs = function() {
@@ -67,7 +69,7 @@ angular.module('starter.services', [])
 
             $timeout( function() {
                 deferred.resolve(tabs);
-            }, 200)
+            }, 3500)
 
             return deferred.promise;
         };
@@ -75,4 +77,5 @@ angular.module('starter.services', [])
         return {
             getTabs : getTabs
         };
-    })
+
+    });

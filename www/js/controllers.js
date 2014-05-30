@@ -1,7 +1,14 @@
 angular.module('starter.controllers', [])
 
+    .controller("LoadingController", function($scope, $state, DynamicStateService) {
+
+        $scope.$on('statesReady', function(event, data) {
+            $state.go(data.startingState);
+        });
+
+    })
+
     .controller("TabController", function($scope, DynamicStateService, TabsService) {
-        console.log("TabController!");
 
         $scope.data = {};
 
