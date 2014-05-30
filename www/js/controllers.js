@@ -18,4 +18,10 @@ angular.module('starter.controllers', [])
             }
         );
 
+    }])
+
+    .controller("ListController", ["$scope", "ListData", function($scope, ListData) {
+
+        $scope.data.items = ListData;
+
     }]);

@@ -1,5 +1,7 @@
 <ion-view title="Friends">
-    <ion-content class="has-header padding">
-        <h2>Friends Tab!</h2>
+    <ion-content class="has-header">
+        <div class="list">
+            <div class="item" ng-repeat="item in data.items">{{item.firstName}} {{item.lastName}}</div>
+        </div>
     </ion-content>
 </ion-view>

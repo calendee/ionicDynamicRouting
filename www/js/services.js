@@ -1,6 +1,5 @@
 angular.module("starter.services", [])
 
-
     .service("DynamicStateService", ["$state", "$rootScope", "TabsService", function($state, $rootScope, TabsService) {
 
         var generateTabs = function(tabs) {
@@ -12,6 +11,20 @@ angular.module("starter.services", [])
                 stateConfig.views = {};
                 stateConfig.views[tab.viewName] = {};
                 stateConfig.views[tab.viewName].templateUrl = tab.template;
+
+                switch(tab.viewType) {
+                    case "list":
+                        stateConfig.views[tab.viewName].controller = "ListController";
+
+                        var resolve = {
+                            ListData : [ "DataSource", function(DataSource) {
+                                return DataSource.getData(tab.dataSource);
+                            }]
+                        };
+                        stateConfig.resolve = resolve;
+
+                        break;
+                }
 
                 app.stateProvider.state(tab.state, stateConfig)
 
@@ -35,31 +48,37 @@ angular.module("starter.services", [])
 
         var tabs = [
             {
-                "label"     : "Dash",
-                "state"     : "tab.dash",
-                "viewName"  : "tab-dash",
-                "stateUrl"  : "/dash",
-                "url"       : "#/tab/dash",
-                "template"  : "templates/tab-dash.html",
-                "icon"      : "ion-home"
+                "label"         : "Dash",
+                "state"         : "tab.dash",
+                "viewName"      : "tab-dash",
+                "stateUrl"      : "/dash",
+                "url"           : "#/tab/dash",
+                "template"      : "templates/tab-dash.html",
+                "icon"          : "ion-home",
+                "viewType"      : "",
+                "dataSource"    : ""
             },
             {
-                "label"     : "Friends",
-                "state"     : "tab.friends",
-                "viewName"  : "tab-friends",
-                "stateUrl"  : "/friends",
-                "url"       : "#/tab/friends",
-                "template"  : "templates/tab-friends.html",
-                "icon"      : "ion-heart"
+                "label"         : "Friends",
+                "state"         : "tab.friends",
+                "viewName"      : "tab-friends",
+                "stateUrl"      : "/friends",
+                "url"           : "#/tab/friends",
+                "template"      : "templates/tab-friends.html",
+                "icon"          : "ion-heart",
+                "viewType"      : "list",
+                "dataSource"    : "friends"
             },
             {
-                "label"     : "Account",
-                "state"     : "tab.account",
-                "viewName"  : "tab-account",
-                "stateUrl"  : "/account",
-                "url"       : "#/tab/account",
-                "template"  : "templates/tab-account.html",
-                "icon"      : "ion-gear-b"
+                "label"         : "Account",
+                "state"         : "tab.account",
+                "viewName"      : "tab-account",
+                "stateUrl"      : "/account",
+                "url"           : "#/tab/account",
+                "template"      : "templates/tab-account.html",
+                "icon"          : "ion-gear-b",
+                "viewType"      : "",
+                "dataSource"    : ""
             }
         ];
 
@@ -69,7 +88,7 @@ angular.module("starter.services", [])
 
             $timeout( function() {
                 deferred.resolve(tabs);
-            }, 3500);
+            }, 500);
 
             return deferred.promise;
         };
@@ -78,4 +97,38 @@ angular.module("starter.services", [])
             getTabs : getTabs
         };
 
+    }])
+
+    .factory("DataSource", ["$q", "$timeout", function($q, $timeout) {
+
+        var data = {
+
+            "friends" : [
+                {
+                    "id"        : "ab0d07a8-4746-4047-8a92-a739a7ef7e94",
+                    "firstName" : "John",
+                    "lastName"  : "Doe"
+                },
+                {
+                    "id"        : "01a3d0f2-f110-4d45-9d6c-8e1b4effbb7f",
+                    "firstName" : "Jane",
+                    "lastName"  : "Doe"
+                }
+            ]
+        };
+
+
+        var getData = function(dataProperty) {
+
+            var deferred = $q.defer();
+
+            deferred.resolve(data[dataProperty]);
+
+            return deferred.promise;
+
+        };
+
+        return {
+            getData : getData
+        };
     }]);
