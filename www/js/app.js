@@ -1,6 +1,6 @@
 var app = angular.module("starter", ["ionic", "starter.controllers", "starter.services"])
 
-    .run(["$ionicPlatform", function($ionicPlatform) {
+    .run(["$rootScope", "$ionicPlatform", function($rootScope, $ionicPlatform) {
 
         $ionicPlatform.ready(function() {
 
@@ -15,6 +15,17 @@ var app = angular.module("starter", ["ionic", "starter.controllers", "starter.se
                 StatusBar.styleDefault();
             }
 
+        });
+
+        $rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
+            console.log("stateChangeError:");
+            console.log(error);
+        });
+
+        $rootScope.$on("$stateNotFound", function(event, unfoundState, fromState) {
+            console.log("stateNotFound:");
+            console.log(unfoundState);
+            console.log(fromState);
         });
 
     }])
